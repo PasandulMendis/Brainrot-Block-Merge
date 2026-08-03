@@ -11,6 +11,7 @@ public class AdsManager : MonoBehaviour
     private string rewardedAdUnitId = "ca-app-pub-XXXXXXXXXXXXXXXX/NNNNNNNNNN";
 
     [Header("Settings")]
+    public bool enableBannerAds = false;
     public bool showBannerOnStart = true;
 
     private int interstitialFrequency = 3;
@@ -64,7 +65,7 @@ public class AdsManager : MonoBehaviour
 
     private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
     {
-        if (isAdMobInitialized && showBannerOnStart)
+        if (isAdMobInitialized && showBannerOnStart && enableBannerAds)
         {
             LoadBannerAd();
         }
@@ -78,7 +79,7 @@ public class AdsManager : MonoBehaviour
             isAdMobInitialized = true;
             LoadInterstitialAd();
             LoadRewardedAd();
-            if (showBannerOnStart) LoadBannerAd();
+            if (showBannerOnStart && enableBannerAds) LoadBannerAd();
         }
 
         if (pendingReward)
@@ -105,6 +106,8 @@ public class AdsManager : MonoBehaviour
 
     public void LoadBannerAd()
     {
+        if (!enableBannerAds) return; 
+        
         if (PlayerPrefs.GetInt("IsVIP_Unlocked", 0) == 1) return;
 
         if (bannerView != null)
@@ -124,6 +127,8 @@ public class AdsManager : MonoBehaviour
 
     public void ShowBanner()
     {
+        if (!enableBannerAds) return;
+
         if (PlayerPrefs.GetInt("IsVIP_Unlocked", 0) == 1) return;
 
         if (bannerView != null) bannerView.Show();
